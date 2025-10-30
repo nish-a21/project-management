@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mini Microblog</title>
+  <style>
+    body { font-family: Arial; background: #f5f5f5; text-align: center; }
+    .container { width: 400px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 5px #999; }
+    textarea { width: 100%; height: 60px; border-radius: 5px; border: 1px solid #ccc; padding: 8px; box-sizing: border-box; }
+    button { margin-top: 10px; padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    .post { background: #e9ecef; padding: 10px; margin-top: 10px; border-radius: 8px; text-align: left; }
+    .post-author { font-weight: bold; color: #007bff; margin-bottom: 5px; }
+    .user-item { background: #f8f9fa; padding: 8px; margin: 5px 0; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
+    .follow-btn { padding: 5px 12px; font-size: 12px; }
+    .following { background: #28a745; }
+  </style>
+</head>
+<body>
+  <div class="container" id="loginPage">
+    <h2>Login Page</h2>
+    <input type="text" id="username" placeholder="Enter your name" />
+    <br><br>
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div class="container" id="mainPage" style="display:none;">
+    <h2>Welcome, <span id="user"></span></h2>
+    <button onclick="showPage('post')">Post</button>
+    <button onclick="showPage('feed')">Feed</button>
+    <button onclick="showPage('users')">Users</button>
+    <button onclick="logout()" style="background: #dc3545;">Logout</button>
+    
+    <div id="postPage" style="display:none; margin-top: 20px;">
+      <textarea id="postContent" placeholder="What's happening?"></textarea>
+      <button onclick="addPost()">Post</button>
+    </div>
+
+    <div id="feedPage" style="display:none; margin-top: 20px;">
+      <h3>Your Feed</h3>
+      <div id="feed"></div>
+    </div>
+
+    <div id="usersPage" style="display:none; margin-top: 20px;">
+      <h3>Users</h3>
+      <div id="usersList"></div>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = '';
+    let allPosts = [];
+    let allUsers = ['Alice', 'Bob', 'Charlie'];
+    let following = {};
+
+    function login() {
+      let name = document.getElementById('username').value;
+      if(name.trim() === "") return alert("Please enter your name");
+      currentUser = name;
+      
+      if(!allUsers.includes(name)) {
+        allUsers.push(name);
+      }
+      
+      if(!following[currentUser]) {
+        following[currentUser] = [];
+      }
+      
+      document.getElementById('user').innerText = name;
+      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('mainPage').style.display = 'block';
+      showPage('post');
+    }
+
+    function showPage(page) {
+      document.getElementById('postPage').style.display = 'none';
+      document.getElementById('feedPage').style.display = 'none';
+      document.getElementById('usersPage').style.display = 'none';
+      
+      if(page === 'post') {
+        document.getElementById('postPage').style.display = 'block';
+      } else if(page === 'feed') {
+        document.getElementById('feedPage').style.display = 'block';
+        displayFeed();
+      } else if(page === 'users') {
+        document.getElementById('usersPage').style.display = 'block';
+        displayUsers();
+      }
+    }
+
+    function addPost() {
+      let content = document.getElementById('postContent').value;
+      if(content.trim() === "") return alert("Please write something!");
+      
+      allPosts.unshift({
+        author: currentUser,
+        content: content
+      });
+      
+      document.getElementById('postContent').value = "";
+      alert("Posted successfully!");
+    }
+
+    function displayFeed() {
+      let feed = document.getElementById('feed');
+      feed.innerHTML = '';
+      
+      let myFollowing = following[currentUser] || [];
+      let feedPosts = allPosts.filter(post => myFollowing.includes(post.author));
+      
+      if(feedPosts.length === 0) {
+        feed.innerHTML = '<p>No posts. Follow users to see their posts!</p>';
+        return;
+      }
+      
+      feedPosts.forEach(post => {
+        let div = document.createElement('div');
+        div.className = 'post';
+        div.innerHTML = '<div class="post-author">@' + post.author + '</div>' + post.content;
+        feed.appendChild(div);
+      });
+    }
+
+    function displayUsers() {
+      let usersList = document.getElementById('usersList');
+      usersList.innerHTML = '';
+      
+      allUsers.forEach(user => {
+        if(user === currentUser) return;
+        
+        let div = document.createElement('div');
+        div.className = 'user-item';
+        
+        let isFollowing = (following[currentUser] || []).includes(user);
+        
+        div.innerHTML = '<span>' + user + '</span>' +
+          '<button class="follow-btn ' + (isFollowing ? 'following' : '') + '" onclick="toggleFollow(\'' + user + '\')">' +
+          (isFollowing ? 'Unfollow' : 'Follow') + '</button>';
+        
+        usersList.appendChild(div);
+      });
+    }
+
+    function toggleFollow(user) {
+      if(!following[currentUser]) {
+        following[currentUser] = [];
+      }
+      
+      let index = following[currentUser].indexOf(user);
+      if(index > -1) {
+        following[currentUser].splice(index, 1);
+      } else {
+        following[currentUser].push(user);
+      }
+      
+      displayUsers();
+    }
+
+    function logout() {
+      currentUser = '';
+      document.getElementById('username').value = '';
+      document.getElementById('loginPage').style.display = 'block';
+      document.getElementById('mainPage').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
