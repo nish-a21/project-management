@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple To-Do Login App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px gray;
+      text-align: center;
+      width: 300px;
+    }
+
+    input {
+      width: 90%;
+      padding: 8px;
+      margin: 10px 0;
+    }
+
+    button {
+      padding: 8px 15px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #e8e8e8;
+      padding: 6px;
+      margin-top: 5px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="loginPage">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username">
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div class="container hidden" id="todoPage">
+    <h2>Your To-Do List</h2>
+    <input type="text" id="taskInput" placeholder="Add a new task">
+    <div class="buttons">
+      <button onclick="addTask()">Add Task</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+    <ul id="taskList"></ul>
+  </div>
+
+  <script>
+    function login() {
+      const username = document.getElementById("username").value.trim();
+      if (username === "") {
+        alert("Please enter a username!");
+        return;
+      }
+      document.getElementById("loginPage").classList.add("hidden");
+      document.getElementById("todoPage").classList.remove("hidden");
+    }
+
+    function addTask() {
+      const taskInput = document.getElementById("taskInput");
+      const taskText = taskInput.value.trim();
+      if (taskText === "") {
+        alert("Please enter a task!");
+        return;
+      }
+      const li = document.createElement("li");
+      li.textContent = taskText;
+      document.getElementById("taskList").appendChild(li);
+      taskInput.value = "";
+    }
+
+    function logout() {
+      document.getElementById("todoPage").classList.add("hidden");
+      document.getElementById("loginPage").classList.remove("hidden");
+      document.getElementById("username").value = "";
+      document.getElementById("taskList").innerHTML = "";
+    }
+  </script>
+
+</body>
+</html>
