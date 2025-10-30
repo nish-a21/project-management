@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Grocery Delivery</title>
+  <style>
+    body { font-family: Arial; background: #f0f0f0; }
+    .shop, .item { background: white; padding: 10px; margin: 10px; border-radius: 8px; box-shadow: 0 0 5px #ccc; }
+    button { background: green; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<h2 style="text-align:center;">🛍 Grocery Delivery Website</h2>
+
+<div id="shops">
+  <div class="shop">
+    <h3>FreshMart</h3>
+    <button onclick="showItems('FreshMart')">View Items</button>
+  </div>
+  <div class="shop">
+    <h3>Green Grocery</h3>
+    <button onclick="showItems('Green Grocery')">View Items</button>
+  </div>
+</div>
+
+<div id="items"></div>
+
+<h3 style="text-align:center;">🧺 Cart Total: ₹<span id="total">0</span></h3>
+
+<script>
+  const products = {
+    "FreshMart": [{name: "Apples", price: 50}, {name: "Bananas", price: 40}],
+    "Green Grocery": [{name: "Tomatoes", price: 30}, {name: "Onions", price: 25}]
+  };
+  let total = 0;
+
+  function showItems(shop) {
+    let html = <h3>Items from ${shop}</h3>;
+    products[shop].forEach(item => {
+      html += `<div class='item'>${item.name} - ₹${item.price} 
+      <button onclick='addToCart(${item.price})'>Add</button></div>`;
+    });
+    document.getElementById('items').innerHTML = html;
+  }
+
+  function addToCart(price) {
+    total += price;
+    document.getElementById('total').innerText = total;
+  }
+</script>
+
+</body>
+</html>
