@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Project Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #e9ecef;
+    }
+
+    .container {
+      width: 500px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px #888;
+    }
+
+    input, select {
+      padding: 8px;
+      width: 80%;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 8px 16px;
+      border: none;
+      background: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .task {
+      border: 1px solid #ccc;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>📋 Project Dashboard</h2>
+    <input type="text" id="taskName" placeholder="Enter new task"><br>
+    <button onclick="addTask()">Add Task</button>
+
+    <h3>Tasks</h3>
+    <div id="taskList"></div>
+  </div>
+
+  <script>
+    function addTask() {
+      let taskName = document.getElementById('taskName').value;
+      if (taskName.trim() === "") return alert("Please enter task name");
+
+      let div = document.createElement('div');
+      div.className = 'task';
+      div.innerHTML = `
+        <b>${taskName}</b><br>
+        Status:
+        <select onchange="changeStatus(this)">
+          <option>Pending</option>
+          <option>InProgress</option>
+          <option>Completed</option>
+        </select>`;
+      
+      document.getElementById('taskList').appendChild(div);
+      document.getElementById('taskName').value = "";
+    }
+
+    function changeStatus(sel) {
+      sel.parentElement.style.background =
+        sel.value === "Completed" ? "#c3e6cb" :
+        sel.value === "InProgress" ? "#ffeeba" : "#f8d7da";
+    }
+  </script>
+</body>
+</html>
